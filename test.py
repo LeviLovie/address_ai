@@ -26,6 +26,7 @@ with open(test_dataset_file_name, 'r', newline='') as csvfile:
     for row in spamreader:
         test_data.append((row[0], row[1], row[2] == "1"))
 
+results = []
 for input_text_1, input_text_2, expected_result in test_data:
     prediction = round(predict(input_text_1, input_text_2) * 100)
     prediction_bool = prediction >= 50
@@ -38,6 +39,11 @@ for input_text_1, input_text_2, expected_result in test_data:
     input_text_2_shown = ("'" + input_text_2 + "'").ljust(57)
     prediction_shown = str(prediction).ljust(3)
     if prediction_bool == expected_result:
+        results.append(True)
         print(f"{input_text_1_shown} & {input_text_2_shown} => Prediction: {prediction_shown}% (expected: {expected_result_shown}) => \033[1;32mCorrect\033[0m")
     else:
+        results.append(False)
         print(f"{input_text_1_shown} & {input_text_2_shown} => Prediction: {prediction_shown}% (expected: {expected_result_shown}) => \033[1;31mIncorrect\033[0m")
+
+accuracy = np.mean(results)
+print(f"Accuracy: \033[1m{accuracy * 100:.2f}%\033[0m")

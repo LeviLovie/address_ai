@@ -7,7 +7,7 @@ from alive_progress import alive_bar
 
 sample_amount = 5000
 sample_data_file_name = "dataset.csv"
-test_data_amount = 10
+test_data_amount = 25
 test_data_file_name = "test_dataset.csv"
 
 r = RandomWord()

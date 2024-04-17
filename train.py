@@ -15,15 +15,17 @@ with open(dataset_file_name, 'r', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='\\')
     for row in spamreader:
         data.append((row[0], row[1], int(row[2])))
-        data_not_tuples.append(row[0] + " " + row[1])
+        data_not_tuples.append(row[0])
+        data_not_tuples.append(row[1])
 
 X_text = [x1 + x2 for x1, x2, _ in data]
 Y = np.array([label for _, _, label in data])
 
 tokenizer = Tokenizer(char_level=True)
 tokenizer.fit_on_texts(data_not_tuples)
-# max_sequence_length = max([len(sequence) for sequence in tokenizer.texts_to_sequences(data_not_tuples)])
-max_sequence_length = len(tokenizer.word_index.keys())
+max_sequence_length = max([len(x) for x in X_text])
+with open('max_sequence_length.txt', 'w') as f:
+    f.write(str(max_sequence_length))
 print(f"Max sequence length: {max_sequence_length}")
 
 X_indices = tokenizer.texts_to_sequences(X_text)
@@ -48,7 +50,7 @@ class ThresholdCallback(tf.keras.callbacks.Callback):
         if val_acc >= self.threshold:
             self.model.stop_training = True
 
-callback = ThresholdCallback(0.9)
+callback = ThresholdCallback(0.85)
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 model.fit(X_indices, Y, epochs=epochs, batch_size=1, callbacks=[callback])
 

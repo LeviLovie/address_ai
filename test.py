@@ -11,7 +11,8 @@ model = load_model("model.keras")
 with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
-max_sequence_length = len(tokenizer.word_index.keys())
+with open('max_sequence_length.txt', 'r') as f:
+    max_sequence_length = int(f.read())
 
 def predict(input_text_1, input_text_2):
     input_text = input_text_1 + " " + input_text_2
